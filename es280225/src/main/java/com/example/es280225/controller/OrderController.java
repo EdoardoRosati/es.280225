@@ -1,8 +1,10 @@
 package com.example.es280225.controller;
 
 import com.example.es280225.service.OrderService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.es280225.object.dto.OrderDTO;
@@ -19,9 +21,26 @@ public class OrderController {
 
     @GetMapping("/total/{userId}")
     public ResponseEntity<Double> getTotalByUserId(@PathVariable Long userId) {
-        Double total = orderService.getTotalByUserId(userId);
-        return ResponseEntity.ok(total);
+        try {
+            Double total = orderService.getTotalByUserId(userId);
+            return ResponseEntity.ok(total);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Si è verificato un errore imprevisto.");
+    }
+
 
     @GetMapping("/between")
     public ResponseEntity<List<OrderDTO>> getOrdersBetweenDates(
