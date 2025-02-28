@@ -2,12 +2,9 @@ package com.example.es280225.service;
 
 import com.example.es280225.mapper.ProductMapper;
 import com.example.es280225.object.dto.ProductDTO;
-import com.example.es280225.object.dto.UserDTO;
 import com.example.es280225.object.model.Product;
-import com.example.es280225.object.model.User;
 import com.example.es280225.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
